@@ -1,1 +1,32 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Match Results</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Match Results</h1>
+    <table>
+        <tr>
+            <th>Candidate Name</th>
+            <th>Match Percentage</th>
+        </tr>
+        {% for result in results %}
+        <tr>
+            <td>{{ result.filename }}</td>
+            <td>{{ result.match_percentage }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{{ url_for('index') }}">Back</a>
+</body>
+</html>
