@@ -1,0 +1,11 @@
+project/
+│
+├── app.py
+├── templates/
+│   ├── index.html
+│   ├── results.html
+│   ├── test.html
+│   └── dashboard.html
+├── uploads/
+│
+└── .env
