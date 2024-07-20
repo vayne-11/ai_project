@@ -26,17 +26,21 @@ candidates = {}
 
 # Function to extract text from different resume formats
 def extract_text(file_path):
-    if file_path.endswith('.docx'):
-        return docx2txt.process(file_path)
-    elif file_path.endswith('.pdf'):
-        with open(file_path, 'rb') as pdf_file:
-            reader = PyPDF2.PdfFileReader(pdf_file)
+    try:
+        if file_path.endswith('.docx'):
+            return docx2txt.process(file_path)
+        elif file_path.endswith('.pdf'):
             text = ''
-            for page in range(reader.numPages):
-                text += reader.getPage(page).extract_text()
+            with open(file_path, 'rb') as pdf_file:
+                reader = PyPDF2.PdfFileReader(pdf_file)
+                for page in range(reader.numPages):
+                    text += reader.getPage(page).extract_text()
             return text
-    else:
-        return textract.process(file_path).decode('utf-8')
+        else:
+            return textract.process(file_path).decode('utf-8')
+    except Exception as e:
+        print(f"Error processing file {file_path}: {e}")
+        return ""
 
 # Function to match resume with job description using Azure OpenAI
 def match_resume_with_job_description(job_description, resume_text):
@@ -130,7 +134,8 @@ def test(test_id):
         candidate_info['answers'] = answers
         candidate_info['status'] = 'Submitted'
         # Here you would add logic to validate answers for plagiarism and AI-generated content
-        candidate_info['validation_result'] = "Valid"  # Placeholder for validation result
+        candidate_info['plagiarism_check_result'] = "No plagiarism detected"  # Placeholder for plagiarism result
+        candidate_info['ai_generated_check_result'] = "No AI-generated content detected"  # Placeholder for AI-generated check result
         return redirect(url_for('dashboard'))
 
     return render_template('test.html', test_id=test_id, questions=questions)
