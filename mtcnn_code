@@ -1,0 +1,48 @@
+#pip install mtcnn opencv-python opencv-python-headless
+
+import cv2
+from mtcnn import MTCNN
+import numpy as np
+
+# Function to analyze emotions from video
+def analyze_emotions(video_path):
+    cap = cv2.VideoCapture(video_path)
+    detector = MTCNN()
+    emotion_scores = {'confidence': 0, 'fear': 0, 'happiness': 0, 'sadness': 0}
+    frame_count = 0
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        frame_count += 1
+        faces = detector.detect_faces(frame)
+
+        for face in faces:
+            x, y, width, height = face['box']
+            face_img = frame[y:y+height, x:x+width]
+            cv2.rectangle(frame, (x, y), (x+width, y+height), (255, 0, 0), 2)
+
+            # Placeholder for emotion detection logic (to be replaced with actual model)
+            emotion_scores['confidence'] += 0.1  # Example increment
+            emotion_scores['fear'] += 0.05  # Example increment
+            emotion_scores['happiness'] += 0.03  # Example increment
+            emotion_scores['sadness'] += 0.02  # Example increment
+
+        # Display the frame with detected faces
+        cv2.imshow('Video', frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+    # Normalize scores by frame count
+    emotion_scores = {key: value/frame_count for key, value in emotion_scores.items()}
+    return emotion_scores
+
+if __name__ == '__main__':
+    video_path = 'path_to_your_video_file.mp4'  # Replace with your video file path
+    emotion_scores = analyze_emotions(video_path)
+    print("Emotion scores:", emotion_scores)
