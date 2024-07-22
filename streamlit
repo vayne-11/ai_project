@@ -1,0 +1,98 @@
+#pip install streamlit transformers datasets moviepy torch torchvision torchaudio
+
+
+import streamlit as st
+import moviepy.editor as mp
+from transformers import pipeline, AutoTokenizer, AutoModelForSeq2SeqLM
+import tempfile
+import os
+import torch
+from azure.ai.openai import OpenAIClient
+from azure.core.credentials import AzureKeyCredential
+from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
+
+# Azure OpenAI credentials
+api_key = os.getenv("AZURE_OPENAI_API_KEY")
+endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+client = OpenAIClient(endpoint=endpoint, credential=AzureKeyCredential(api_key))
+
+# Hugging Face ASR model
+asr_pipeline = pipeline("automatic-speech-recognition", model="facebook/wav2vec2-large-960h")
+
+# Emotion detection placeholder function (to be replaced with an actual model)
+def analyze_emotions(frames):
+    # Placeholder logic for emotion analysis
+    emotion_scores = {'confidence': 0.7, 'fear': 0.2, 'angry': 0.1, 'honest': 0.8, 'anxious': 0.3}
+    return emotion_scores
+
+# Function to transcribe video using Hugging Face's ASR model
+def transcribe_video(video_path):
+    audio_path = "temp_audio.wav"
+    video = mp.VideoFileClip(video_path)
+    video.audio.write_audiofile(audio_path)
+    transcription = asr_pipeline(audio_path)["text"]
+    os.remove(audio_path)
+    return transcription
+
+# Placeholder for question-answer pairs
+questions = [
+    "What is your greatest strength?",
+    "What is your greatest weakness?",
+    "Why do you want this job?",
+    "Where do you see yourself in 5 years?",
+    "Why did you leave your last job?",
+    "Describe a difficult work situation and how you overcame it.",
+    "What are your salary expectations?",
+    "Why should we hire you?",
+    "What are your career goals?",
+    "Tell me about a time you showed leadership."
+]
+
+def check_responses(transcription, questions):
+    responses = transcription.split('.')
+    scores = []
+    
+    for i, question in enumerate(questions):
+        if i < len(responses):
+            response = responses[i]
+            # Placeholder for correctness check (use Azure OpenAI API)
+            result = client.analyze_syntax(response)
+            # Placeholder scoring logic
+            score = result['score'] if 'score' in result else 0.8  # Example score
+            scores.append(score)
+        else:
+            scores.append(0)  # No response given
+    
+    return scores
+
+st.title("Candidate Video Analysis")
+
+uploaded_file = st.file_uploader("Upload a Video File", type=["mp4", "mov", "avi"])
+
+if uploaded_file is not None:
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        temp_file.write(uploaded_file.getvalue())
+        video_path = temp_file.name
+
+    st.video(video_path)
+
+    if st.button("Analyze Video"):
+        with st.spinner('Transcribing video...'):
+            transcription = transcribe_video(video_path)
+            st.subheader("Transcription")
+            st.write(transcription)
+
+        with st.spinner('Analyzing emotions...'):
+            video = mp.VideoFileClip(video_path)
+            frames = [video.get_frame(t) for t in range(0, int(video.duration))]
+            emotion_scores = analyze_emotions(frames)
+            st.subheader("Emotion Analysis")
+            for emotion, score in emotion_scores.items():
+                st.write(f"{emotion.capitalize()}: {score}")
+
+        with st.spinner('Checking responses for correctness and plagiarism...'):
+            scores = check_responses(transcription, questions)
+            st.subheader("Response Check")
+            for i, score in enumerate(scores):
+                st.write(f"Question {i+1}: {questions[i]}")
+                st.write(f"Score: {score}")
