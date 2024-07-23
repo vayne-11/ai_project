@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        h2 {
+            color: #555;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background: #007BFF;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .button.stop {
+            background: #dc3545;
+        }
+        .button:disabled {
+            background: #ccc;
+        }
+        video {
+            display: block;
+            margin-top: 10px;
+            width: 100%;
+            max-width: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Candidate Test</h1>
+        <h2>Java Skills</h2>
+        <form id="testForm" action="/submit_test" method="post" enctype="multipart/form-data">
+            <div class="question">
+                <p>1. Explain the concept of polymorphism in Java.</p>
+                <button type="button" class="button" onclick="startRecording(1)">Record Response</button>
+                <button type="button" class="button stop" onclick="stopRecording(1)" style="display:none;">Stop Recording</button>
+                <video id="videoResponse1" controls style="display:none;"></video>
+                <input type="hidden" name="video1" id="videoInput1">
+            </div>
+            <div class="question">
+                <p>2. How does Java handle memory management?</p>
+                <button type="button" class="button" onclick="startRecording(2)">Record Response</button>
+                <button type="button" class="button stop" onclick="stopRecording(2)" style="display:none;">Stop Recording</button>
+                <video id="videoResponse2" controls style="display:none;"></video>
+                <input type="hidden" name="video2" id="videoInput2">
+            </div>
+            <div class="question">
+                <p>3. What are the different types of inheritance in Java?</p>
+                <button type="button" class="button" onclick="startRecording(3)">Record Response</button>
+                <button type="button" class="button stop" onclick="stopRecording(3)" style="display:none;">Stop Recording</button>
+                <video id="videoResponse3" controls style="display:none;"></video>
+                <input type="hidden" name="video3" id="videoInput3">
+            </div>
+            <div class="question">
+                <p>4. Explain the differences between an interface and an abstract class.</p>
+                <button type="button" class="button" onclick="startRecording(4)">Record Response</button>
+                <button type="button" class="button stop" onclick="stopRecording(4)" style="display:none;">Stop Recording</button>
+                <video id="videoResponse4" controls style="display:none;"></video>
+                <input type="hidden" name="video4" id="videoInput4">
+            </div>
+            <div class="question">
+                <p>5. Describe exception handling in Java.</p>
+                <button type="button" class="button" onclick="startRecording(5)">Record Response</button>
+                <button type="button" class="button stop" onclick="stopRecording(5)" style="display:none;">Stop Recording</button>
+                <video id="videoResponse5" controls style="display:none;"></video>
+                <input type="hidden" name="video5" id="videoInput5">
+            </div>
+            <button type="submit" class="button">Submit Test</button>
+        </form>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let chunks = [];
+        let currentQuestionId;
+
+        function startRecording(questionId) {
+            currentQuestionId = questionId;
+            const recordButton = document.querySelector(`button[onclick="startRecording(${questionId})"]`);
+            const stopButton = document.querySelector(`button[onclick="stopRecording(${questionId})"]`);
+
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
+
+                    mediaRecorder.ondataavailable = event => {
+                        chunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        const blob = new Blob(chunks, { type: 'video/webm' });
+                        chunks = [];
+                        const videoURL = URL.createObjectURL(blob);
+                        const videoElement = document.getElementById(`videoResponse${questionId}`);
+                        const videoInputElement = document.getElementById(`videoInput${questionId}`);
+
+                        videoElement.src = videoURL;
+                        videoElement.style.display = 'block';
+
+                        const reader = new FileReader();
+                        reader.readAsDataURL(blob);
+                        reader.onloadend = () => {
+                            const base64data = reader.result;
+                            videoInputElement.value = base64data;
+                        };
+                    };
+
+                    recordButton.style.display = 'none';
+                    stopButton.style.display = 'inline-block';
+                })
+                .catch(error => {
+                    console.error('Error accessing media devices.', error);
+                });
+        }
+
+        function stopRecording(questionId) {
+            mediaRecorder.stop();
+            const recordButton = document.querySelector(`button[onclick="startRecording(${questionId})"]`);
+            const stopButton = document.querySelector(`button[onclick="stopRecording(${questionId})"]`);
+
+            recordButton.style.display = 'inline-block';
+            stopButton.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
