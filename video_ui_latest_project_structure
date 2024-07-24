@@ -1,0 +1,6 @@
+video-sentiment-analysis/
+│
+├── app.py
+├── requirements.txt
+└── templates/
+    └── index.html
