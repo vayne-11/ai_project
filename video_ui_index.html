@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Sentiment Analysis</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Video Sentiment Analysis</h1>
+        <form id="upload-form" enctype="multipart/form-data">
+            <input type="file" id="video-file" name="video-file" accept="video/*">
+            <button type="button" id="analyze-button">Analyze Video</button>
+        </form>
+        <div id="result" class="hidden">
+            <h2>Sentiment Analysis Results</h2>
+            <p id="analysis-text"></p>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
