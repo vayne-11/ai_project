@@ -1,0 +1,12 @@
+video-sentiment-analysis/
+│
+├── app.py
+├── requirements.txt
+├── templates/
+│   └── index.html
+├── static/
+│   ├── styles.css
+│   └── script.js
+├── video_analysis.py
+├── utils.py
+└── README.md
