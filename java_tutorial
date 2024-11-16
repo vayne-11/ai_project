@@ -1,0 +1,348 @@
+1. Java Basics and Syntax
+Before diving into advanced topics, let’s review the basics. Knowing the syntax is essential for writing clean, error-free code.
+
+1.1. Hello World Program
+
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}
+public class: Declares a public class named HelloWorld. In Java, classes must be public if they are to be accessed from outside the package.
+main(String[] args): The entry point of every Java application.
+System.out.println(): Prints the output to the console.
+1.2. Data Types
+
+Java has two categories of data types: primitive and reference types.
+
+Primitive Types:
+int – Integer data type, e.g., int num = 10;
+float – Decimal number with 6-7 digits precision, e.g., float price = 10.5f;
+double – Decimal number with higher precision, e.g., double pi = 3.14159;
+char – Single character, e.g., char grade = 'A';
+boolean – True or false value, e.g., boolean isValid = true;
+long – Larger integer, e.g., long population = 7000000000L;
+Reference Types:
+String – Immutable sequence of characters, e.g., String greeting = "Hello, World!";
+Arrays, Objects, etc.
+1.3. Control Flow Statements
+
+Java has the usual control structures, like loops and conditionals.
+
+If-Else:
+int x = 10;
+if (x > 0) {
+    System.out.println("Positive");
+} else {
+    System.out.println("Negative");
+}
+Switch:
+int day = 3;
+switch (day) {
+    case 1: System.out.println("Monday"); break;
+    case 2: System.out.println("Tuesday"); break;
+    case 3: System.out.println("Wednesday"); break;
+    default: System.out.println("Invalid day");
+}
+Loops: for, while, and do-while
+for (int i = 0; i < 5; i++) {
+    System.out.println(i); // prints 0 to 4
+}
+
+int i = 0;
+while (i < 5) {
+    System.out.println(i);  // prints 0 to 4
+    i++;
+}
+2. Object-Oriented Programming (OOP) Concepts
+Java is fundamentally object-oriented. Mastering the four pillars of OOP—Encapsulation, Inheritance, Polymorphism, and Abstraction—is crucial.
+
+2.1. Classes and Objects
+
+A class is a blueprint for objects, and objects are instances of classes.
+
+class Person {
+    String name;
+    int age;
+
+    // Constructor
+    Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    void displayDetails() {
+        System.out.println("Name: " + name + ", Age: " + age);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Person person1 = new Person("John", 25);
+        person1.displayDetails();  // Output: Name: John, Age: 25
+    }
+}
+Constructor: A special method that is called when an object is created. It initializes the object’s state.
+2.2. Encapsulation
+
+Encapsulation is the concept of bundling the data (variables) and methods (functions) that operate on the data into a single unit or class. It also helps hide the internal details and restricts direct access to some of the object's components.
+
+class BankAccount {
+    private double balance;
+
+    // Getter
+    public double getBalance() {
+        return balance;
+    }
+
+    // Setter
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount();
+        account.deposit(500);
+        System.out.println("Balance: " + account.getBalance());  // Output: Balance: 500.0
+    }
+}
+2.3. Inheritance
+
+Inheritance allows one class to inherit the properties and methods of another class.
+
+class Animal {
+    void sound() {
+        System.out.println("Animal makes a sound");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    void sound() {
+        System.out.println("Dog barks");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Dog dog = new Dog();
+        dog.sound();  // Output: Dog barks
+    }
+}
+extends keyword: Used to inherit from a class.
+@Override annotation: Used to indicate that a method is being overridden in the subclass.
+2.4. Polymorphism
+
+Polymorphism allows objects to behave in multiple ways. It can be achieved through method overloading and method overriding.
+
+Method Overloading (Compile-time Polymorphism)
+class Calculator {
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    double add(double a, double b) {
+        return a + b;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Calculator calc = new Calculator();
+        System.out.println(calc.add(5, 3));      // Output: 8
+        System.out.println(calc.add(5.5, 3.5));  // Output: 9.0
+    }
+}
+Method Overriding (Run-time Polymorphism)
+class Animal {
+    void sound() {
+        System.out.println("Animal makes a sound");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    void sound() {
+        System.out.println("Dog barks");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal myAnimal = new Animal();
+        myAnimal.sound();  // Output: Animal makes a sound
+
+        Animal myDog = new Dog();
+        myDog.sound();  // Output: Dog barks (runtime polymorphism)
+    }
+}
+2.5. Abstraction
+
+Abstraction involves hiding the complex implementation details and exposing only the essential features of an object.
+
+abstract class Animal {
+    abstract void sound();
+}
+
+class Dog extends Animal {
+    void sound() {
+        System.out.println("Dog barks");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal dog = new Dog();
+        dog.sound();  // Output: Dog barks
+    }
+}
+Abstract Class: Can have abstract methods (methods without a body) and concrete methods (methods with a body).
+abstract keyword: Used to declare an abstract class or method.
+3. Exception Handling
+Exception handling allows us to handle runtime errors and maintain program flow.
+
+3.1. Try-Catch Block
+
+public class ExceptionExample {
+    public static void main(String[] args) {
+        try {
+            int[] arr = new int[5];
+            arr[10] = 100;  // ArrayIndexOutOfBoundsException
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Exception caught: " + e);
+        }
+    }
+}
+try block: Contains code that might throw an exception.
+catch block: Catches and handles the exception.
+3.2. Finally Block
+
+The finally block executes regardless of whether an exception occurred or not.
+
+public class FinallyExample {
+    public static void main(String[] args) {
+        try {
+            System.out.println("Inside try block");
+        } catch (Exception e) {
+            System.out.println("Exception caught");
+        } finally {
+            System.out.println("Finally block executed");
+        }
+    }
+}
+3.3. Custom Exception
+
+You can define your own exception classes by extending Exception.
+
+class InvalidAgeException extends Exception {
+    InvalidAgeException(String message) {
+        super(message);
+    }
+}
+
+public class CustomExceptionExample {
+    public static void main(String[] args) {
+        try {
+            int age = -1;
+            if (age < 0) {
+                throw new InvalidAgeException("Age cannot be negative");
+            }
+        } catch (InvalidAgeException e) {
+            System.out.println("Caught: " + e.getMessage());
+        }
+    }
+}
+4. File Handling
+Java provides classes for working with files, such as File, FileReader, FileWriter, BufferedReader, BufferedWriter, etc.
+
+4.1. Reading from a File
+
+import java.io.*;
+
+public class FileReadExample {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader("example.txt"));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
+        }
+        reader.close();
+    }
+}
+4.2. Writing to a File
+
+import java.io.*;
+
+public class FileWriteExample {
+    public static void main(String[] args) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("example.txt"));
+        writer.write("Hello, World!");
+        writer.close();
+    }
+}
+BufferedReader: Reads text from a character-based input stream.
+BufferedWriter: Writes text to a character-based output stream.
+5. Collections Framework
+Java's Collections Framework provides a set of classes and interfaces for storing and manipulating groups of objects.
+
+5.1. List
+
+A List is an ordered collection that allows duplicate elements.
+
+import java.util.*;
+
+public class ListExample {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
+        list.add("Apple");
+        list.add("Banana");
+        list.add("Cherry");
+        
+        for (String item : list) {
+            System.out.println(item);
+        }
+    }
+}
+5.2. Set
+
+A Set is an unordered collection that doesn't allow duplicate elements.
+
+import java.util.*;
+
+public class SetExample {
+    public static void main(String[] args) {
+        Set<String> set = new HashSet<>();
+        set.add("Apple");
+        set.add("Banana");
+        set.add("Apple");  // Duplicate will not be added
+        
+        for (String item : set) {
+            System.out.println(item);
+        }
+    }
+}
+5.3. Map
+
+A Map stores key-value pairs. It does not allow duplicate keys.
+
+import java.util.*;
+
+public class MapExample {
+    public static void main(String[] args) {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("Apple", 1);
+        map.put("Banana", 2);
+        
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+    }
+}
+Conclusion
+This crash course covers a wide range of Core Java concepts and prepares you for interviews. Make sure to practice coding exercises regularly to reinforce your understanding of these concepts.
+
+If you have any questions or need further explanations, feel free to ask!
